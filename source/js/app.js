@@ -11,6 +11,7 @@ window.onload = function() {
         $gitcomment = document.getElementById("gitcomment"),
         $backToTop = document.getElementById("back-to-top"),
         $toc = document.getElementById("article-toc"),
+        $mainNavigation = document.querySelector(".main-navigation"),
         timer = null;
 
     //设备判断
@@ -81,16 +82,22 @@ window.onload = function() {
     //监听滚动事件
     window.addEventListener('scroll', function() {
         if ($toc) {
-            var top = $toc.offsetTop;
-            var left = $toc.offsetLeft;
-            var width = $toc.offsetWidth;
-            if (getScrollTop() <= top) {
+            // var top = $toc.offsetTop;
+            // var left = $toc.offsetLeft;
+            // var width = $toc.offsetWidth;
+            // if (getScrollTop() <= top) {
+            //     $toc.style = "";
+            // } else {
+            //     $toc.style.position = "fixed";
+            //     $toc.style.top = top + 'px';
+            //     $toc.style.left = left + "px";
+            //     $toc.style.width = width + "px"
+            // }
+            var top = $mainNavigation.offsetTop + $mainNavigation.offsetHeight;
+            if (getScrollTop() - top >= 0) {
+                $toc.style.top = getScrollTop() - top + 'px';
+            }else {
                 $toc.style = "";
-            } else {
-                $toc.style.position = "fixed";
-                $toc.style.top = "5px";
-                $toc.style.left = left + "px";
-                $toc.style.width = width + "px"
             }
         }
         clearTimeout(timer);
