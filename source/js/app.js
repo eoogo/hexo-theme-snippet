@@ -1,7 +1,7 @@
 /*!========================================================================
  *  hexo-theme-snippet: app.js v1.0.0
  * ======================================================================== */
-window.onload = function() {
+// window.onload = function() {
     var $body = document.body,
         $mnav = document.getElementById("mnav"), //获取导航三角图标
         $mainMenu = document.getElementById("main-menu"), //手机导航
@@ -103,6 +103,22 @@ window.onload = function() {
         clearTimeout(timer);
         timer = setTimeout(function fn() {
             scrollCallback();
+            // 侧边栏定位
+            var titles = document.querySelectorAll('.post-body.post-content h1,.post-body.post-content h2,.post-body.post-content h3,.post-body.post-content h4,.post-body.post-content h5,.post-body.post-content h6');
+            titles = Array.prototype.slice.call(titles).reverse();
+            for (item of titles) {
+                // console.log(item);
+                document.querySelectorAll(`.toc a.toc-link`).forEach(i => {
+                    i.removeAttribute('style');
+                });
+                if ((getScrollTop() - item.offsetTop) > 100) {
+                    // console.log(`.toc a[href="#${item.getAttribute('id')}"]`);
+                    // 记录当前位置
+                    history.replaceState(null, '', location.href.replace(location.hash, '') + '#' + item.getAttribute('id'));
+                    document.querySelector(`.toc a.toc-link[href="#${item.getAttribute('id')}"]`).setAttribute('style', 'color: #0cc4f8;');
+                    break;
+                }
+            }
         }, 200);
     });
 
@@ -119,5 +135,27 @@ window.onload = function() {
             }
         });
     };
+// };
 
-};
+// 双击复制代码
+document.addEventListener('contextmenu', function (event) {
+    if (event.target.parentElement.className == 'code') {
+        var target = event.target;
+        var input_temp = document.createElement('input');
+        input_temp.setAttribute('style', 'display: absolute;top:-100px;');
+        input_temp.setAttribute('value', target.innerText);
+        document.body.append(input_temp);
+        input_temp.select();
+        document.execCommand('copy');
+        input_temp.remove();
+        event.stopPropagation();
+        event.preventDefault();
+        return false;
+    }
+});
+
+// 分页按钮ejs的bug???
+var prev_btn = document.querySelector('.extend.prev');
+if (prev_btn) prev_btn.innerHTML = prev_btn.innerText;
+var next_btn = document.querySelector('.extend.next');
+if (next_btn) next_btn.innerHTML = next_btn.innerText;
